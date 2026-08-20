@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marcus Ziniti — Mechanical Engineering</title>
+<meta name="description" content="Marcus Ziniti — Mechanical Engineering student portfolio. Aerospace structures, CAD, FEA, and manufacturing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     EDIT ZONE: search for "EDIT:" comments to find every place
+     you should update as your experience grows.
+     ============================================================ */
+
+  :root{
+    --blueprint:      #17324f;
+    --blueprint-deep:  #0f2438;
+    --blueprint-line: #bcd6ea;
+    --paper:          #edefe9;
+    --paper-raised:   #f7f8f4;
+    --ink:            #1e2731;
+    --graphite:       #5c6773;
+    --graphite-faint: #aeb6bd;
+    --orange:         #d9581f;
+    --orange-dim:     #b8481a;
+    --cyan:           #4f88ab;
+    --radius: 2px;
+    --frame: 14px;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+    --grid-line: rgba(23,50,79,.055);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } *{ animation:none !important; transition:none !important; } }
+
+  body{
+    font-family:var(--sans);
+    background:var(--blueprint);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:inherit; }
+  ::selection{ background:var(--orange); color:#fff; }
+
+  /* ---------- drawing-sheet frame ---------- */
+  .sheet-frame{ position:fixed; inset:0; pointer-events:none; z-index:80; border:var(--frame) solid var(--blueprint); }
+  .sheet-frame::before{ content:""; position:absolute; inset:var(--frame); border:1px solid var(--blueprint-line); opacity:.55; }
+  .zone-row{ position:fixed; left:var(--frame); right:var(--frame); display:flex; justify-content:space-between; font-family:var(--mono); font-size:10px; letter-spacing:.12em; color:var(--blueprint-line); opacity:.8; z-index:81; pointer-events:none; padding:0 6px; }
+  .zone-row.top{ top:0; height:var(--frame); align-items:center; }
+  .zone-row.bottom{ bottom:0; height:var(--frame); align-items:center; }
+  .zone-col{ position:fixed; top:var(--frame); bottom:var(--frame); display:flex; flex-direction:column; justify-content:space-between; font-family:var(--mono); font-size:10px; letter-spacing:.12em; color:var(--blueprint-line); opacity:.8; z-index:81; pointer-events:none; padding:6px 0; }
+  .zone-col.left{ left:0; width:var(--frame); align-items:center; }
+  .zone-col.right{ right:0; width:var(--frame); align-items:center; }
+  .zone-col span, .zone-row span{ writing-mode:horizontal-tb; }
+  .zone-col.left span, .zone-col.right span{ writing-mode:vertical-rl; }
+
+  @media (max-width: 720px){ :root{ --frame: 8px; } .zone-row, .zone-col{ display:none; } }
+
+  /* ---------- title block ---------- */
+  .title-block{ position:fixed; right:var(--frame); bottom:var(--frame); z-index:90; background:var(--blueprint); border:1px solid var(--blueprint-line); font-family:var(--mono); font-size:10px; color:var(--blueprint-line); display:grid; grid-template-columns:auto auto; min-width:220px; }
+  .title-block div{ padding:4px 8px; border-top:1px solid rgba(188,214,234,.35); border-left:1px solid rgba(188,214,234,.35); }
+  .title-block div:nth-child(-n+2){ border-top:none; }
+  .title-block .label{ color:var(--blueprint-line); opacity:.6; border-left:none; }
+  .title-block .val{ color:#fff; text-align:right; }
+  @media (max-width: 720px){ .title-block{ display:none; } }
+
+  /* ---------- nav ---------- */
+  header.nav{ position:sticky; top:0; z-index:70; background:var(--blueprint-deep); border-bottom:1px solid var(--blueprint-line); margin:var(--frame) var(--frame) 0; }
+  .nav-inner{ max-width:1180px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .nav-mark{ font-family:var(--mono); font-weight:700; color:#fff; font-size:14px; letter-spacing:.04em; }
+  .nav-mark small{ display:block; font-weight:400; font-size:10px; color:var(--blueprint-line); letter-spacing:.16em; margin-top:2px;}
+  .nav-links{ display:flex; gap:22px; font-family:var(--mono); font-size:12px; letter-spacing:.06em; }
+  .nav-links a{ text-decoration:none; color:var(--blueprint-line); position:relative; padding-bottom:3px; }
+  .nav-links a:hover{ color:#fff; }
+  .nav-links a::after{ content:""; position:absolute; left:0; bottom:0; height:1px; width:0; background:var(--orange); transition:width .2s ease; }
+  .nav-links a:hover::after{ width:100%; }
+  @media (max-width: 640px){ .nav-links{ display:none; } }
+
+  main{
+    background-color:var(--paper);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:28px 28px;
+    margin:0 var(--frame) var(--frame);
+  }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
+
+  section{ padding:96px 0; border-bottom:1px solid #d8d5c8; }
+  section:last-of-type{ border-bottom:none; }
+
+  .eyebrow{ font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--orange); display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--orange); }
+  .eyebrow .detail-mark{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:18px; height:18px; border:1px solid var(--orange); border-radius:50%;
+    font-size:10px; font-weight:700; color:var(--orange);
+  }
+
+  h1,h2,h3{ font-family:var(--mono); font-weight:700; color:var(--ink); letter-spacing:-.01em; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-top:64px; }
+  .hero h1{ font-size:clamp(34px,6vw,60px); line-height:1.08; max-width:16ch; }
+  .hero h1 em{ font-style:normal; color:var(--orange); }
+  .hero p.lede{ font-size:18px; color:var(--graphite); max-width:56ch; margin-top:22px; }
+  .hero-meta{ margin-top:44px; display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0; border-top:1px solid var(--graphite-faint); }
+  .hero-meta div{ padding:14px 0; border-right:1px solid var(--graphite-faint); padding-right:16px; }
+  .hero-meta div:last-child{ border-right:none; }
+  .hero-meta .k{ font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--graphite); text-transform:uppercase; }
+  .hero-meta .v{ font-family:var(--mono); font-size:15px; color:var(--ink); margin-top:6px; font-weight:600; }
+  .cta-row{ margin-top:36px; display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{ font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; padding:12px 22px; border:1px solid var(--ink); color:var(--ink); display:inline-flex; align-items:center; gap:8px; transition:background .15s, color .15s; }
+  .btn.primary{ background:var(--orange); border-color:var(--orange); color:#fff; }
+  .btn.primary:hover{ background:var(--orange-dim); border-color:var(--orange-dim); }
+  .btn:not(.primary):hover{ background:var(--ink); color:var(--paper); }
+
+  /* ---------- about ---------- */
+  .about-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:64px; }
+  @media (max-width:820px){ .about-grid{ grid-template-columns:1fr; gap:36px; } }
+  .about-grid p{ color:var(--graphite); max-width:60ch; }
+  .about-grid p + p{ margin-top:14px; }
+  .spec-list{ font-family:var(--mono); font-size:13px; }
+  .spec-list li{ list-style:none; display:flex; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px dashed var(--graphite-faint); }
+  .spec-list .k{ color:var(--graphite); }
+  .spec-list .v{ color:var(--ink); font-weight:600; text-align:right; }
+
+  .coursework{ margin-top:26px; }
+  .coursework h4{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); margin-bottom:10px; }
+  .coursework-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .coursework-row span{ font-family:var(--mono); font-size:11px; padding:5px 9px; border:1px dashed var(--graphite-faint); color:var(--graphite); }
+
+  /* ---------- projects / BOM table ---------- */
+  .bom-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:10px;}
+  table.bom{ width:100%; border-collapse:collapse; font-family:var(--mono); font-size:13px; }
+  table.bom thead th{ text-align:left; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--graphite); border-bottom:1px solid var(--ink); padding:0 10px 10px; }
+  table.bom tbody tr{ cursor:pointer; border-bottom:1px solid var(--graphite-faint); }
+  table.bom tbody tr:hover{ background:rgba(217,88,31,.06); }
+  table.bom td{ padding:16px 10px; vertical-align:top; }
+  table.bom td.item{ color:var(--orange); font-weight:700; width:54px; }
+  table.bom td.name{ color:var(--ink); font-weight:600; }
+  table.bom td.name .sub{ display:block; color:var(--graphite); font-weight:400; font-size:12px; margin-top:3px; font-family:var(--sans); }
+  table.bom td.mat, table.bom td.qty{ color:var(--graphite); white-space:nowrap; }
+  table.bom td.chevron{ text-align:right; color:var(--graphite-faint); width:24px; }
+  tr.bom-row.open .chevron{ color:var(--orange); }
+
+  .bom-detail{ display:none; background:var(--paper-raised); border-left:3px solid var(--orange); }
+  .bom-detail.open{ display:table-row; }
+  .bom-detail td{ padding:22px 10px 30px 10px; font-family:var(--sans); }
+  .bom-detail .detail-grid{ display:grid; grid-template-columns:2fr 1fr; gap:32px; }
+  @media (max-width:720px){ .bom-detail .detail-grid{ grid-template-columns:1fr; } }
+  .bom-detail p{ color:var(--graphite); font-size:14px; max-width:64ch; }
+  .bom-detail h4{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); margin-bottom:10px; margin-top:18px; }
+  .bom-detail h4:first-child{ margin-top:0; }
+  .taglist{ display:flex; flex-wrap:wrap; gap:8px; }
+  .tag{ font-family:var(--mono); font-size:11px; padding:4px 9px; border:1px solid var(--cyan); color:var(--cyan); border-radius:var(--radius); }
+  .result-list li{ font-size:13px; color:var(--graphite); list-style:none; padding-left:16px; position:relative; margin-top:6px; }
+  .result-list li::before{ content:"→"; position:absolute; left:0; color:var(--orange); }
+
+  /* ---------- skills ---------- */
+  .skills-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:36px; }
+  .skill-group h3{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .skill-group h3::before{ content:"◇"; color:var(--orange); font-size:11px; }
+  .skill-chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ font-family:var(--mono); font-size:12px; padding:7px 11px; background:var(--paper-raised); border:1px solid var(--graphite-faint); color:var(--ink); }
+
+  /* ---------- experience timeline ---------- */
+  .timeline{ position:relative; padding-left:26px; }
+  .timeline::before{ content:""; position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--graphite-faint); }
+  .tl-item{ position:relative; padding-bottom:40px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{ content:""; position:absolute; left:-26px; top:4px; width:9px; height:9px; background:var(--orange); border:2px solid var(--paper); outline:1px solid var(--orange); border-radius:50%; }
+  .tl-date{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--orange); text-transform:uppercase; }
+  .tl-role{ font-family:var(--mono); font-size:17px; font-weight:700; margin-top:6px; }
+  .tl-org{ color:var(--graphite); font-size:13px; margin-top:2px; }
+  .tl-desc{ color:var(--graphite); font-size:14px; margin-top:10px; max-width:64ch; }
+  .tl-desc li{ list-style:none; padding-left:14px; position:relative; margin-top:4px; }
+  .tl-desc li::before{ content:"—"; position:absolute; left:0; color:var(--graphite-faint); }
+
+  /* ---------- general notes (engineering-drawing style) ---------- */
+  .notes-block{
+    margin-top:64px; border:1px solid var(--ink); background:var(--paper-raised);
+  }
+  .notes-block .notes-head{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    background:var(--ink); color:var(--paper); padding:8px 14px;
+  }
+  .notes-block ol{ padding:16px 14px 16px 30px; font-family:var(--mono); font-size:12px; color:var(--graphite); }
+  .notes-block li{ margin-top:6px; }
+  .notes-block li:first-child{ margin-top:0; }
+  .notes-block li::marker{ color:var(--orange); }
+
+  /* ---------- contact ---------- */
+  .contact-block{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:32px; }
+  .contact-block h2{ font-size:clamp(28px,4.5vw,44px); max-width:13ch; line-height:1.1; }
+  .contact-links{ display:flex; flex-direction:column; gap:10px; font-family:var(--mono); font-size:14px; }
+  .contact-links a{ text-decoration:none; border-bottom:1px solid transparent; }
+  .contact-links a:hover{ border-color:var(--orange); color:var(--orange); }
+  .contact-links .k{ font-size:10px; letter-spacing:.12em; color:var(--graphite); text-transform:uppercase; display:block; margin-bottom:2px; }
+
+  footer.foot{ background:var(--blueprint-deep); color:var(--blueprint-line); margin:0 var(--frame) var(--frame); padding:20px 24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-family:var(--mono); font-size:11px; letter-spacing:.06em; }
+  footer.foot a{ color:#fff; text-decoration:none; }
+</style>
+</head>
+<body>
+
+<div class="sheet-frame" aria-hidden="true"></div>
+<div class="zone-row top" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span></div>
+<div class="zone-row bottom" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span></div>
+<div class="zone-col left" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+<div class="zone-col right" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+
+<div class="title-block" aria-hidden="true">
+  <div class="label">DRAWN BY</div><div class="val">M. ZINITI</div>
+  <div class="label">SHEET</div><div class="val" id="sheet-no">01 / 06</div>
+  <div class="label">REV</div><div class="val">A</div>
+  <div class="label">SCALE</div><div class="val">1:1</div>
+</div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="nav-mark">M. ZINITI<small>MECHANICAL ENGINEERING STUDENT</small></div>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero" data-sheet="01 / 06">
+      <p class="eyebrow">Portfolio — Rev. A</p>
+      <h1>Mechanical design for <em>flight</em>, load, and the water it floats on.</h1>
+      <p class="lede">I'm a mechanical engineering student at UMass Amherst working across aerospace structures, payload dynamics, and hands-on fabrication — leading CAD, FEA, and manufacturing efforts on competition aircraft, rockets, and self-directed builds.</p>
+
+      <div class="hero-meta">
+        <div><div class="k">Based in</div><div class="v">Cumberland, RI</div></div>
+        <div><div class="k">Studying at</div><div class="v">UMass Amherst</div></div>
+        <div><div class="k">Focus</div><div class="v">Aerospace Structures</div></div>
+        <div><div class="k">Graduating</div><div class="v">May 2028</div></div>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn primary" href="resume.pdf">Download résumé</a>
+        <a class="btn" href="#projects">View projects</a>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" data-sheet="02 / 06">
+      <p class="eyebrow"><span class="detail-mark">A</span>About</p>
+      <div class="about-grid">
+        <div>
+          <p>I'm a mechanical engineering student in the Commonwealth Honors College at UMass Amherst's Dan Riccio College of Engineering, currently maintaining a 3.85 GPA on the Dean's List. I split my time between two competition engineering teams — leading airframe structures for the AIAA Design/Build/Fly team and payload engineering for the IREC rocket team — plus independent builds like a full-size foldable pontoon boat.</p>
+          <p>I'm most interested in the space where structural analysis meets DFM reality: taking a design from a hand calc or FEA result to something that actually gets machined, assembled, and flown or floated.</p>
+          <div class="coursework">
+            <h4>Relevant coursework</h4>
+            <div class="coursework-row">
+              <span>Thermodynamics</span><span>Statics</span><span>Mechanics of Materials</span><span>Dynamics</span><span>Fluid Mechanics</span><span>Calc IV</span><span>Statistics</span>
+            </div>
+          </div>
+        </div>
+        <ul class="spec-list">
+          <li><span class="k">Education</span><span class="v">B.S. Mechanical Engineering</span></li>
+          <li><span class="k">Institution</span><span class="v">UMass Amherst</span></li>
+          <li><span class="k">Program</span><span class="v">Commonwealth Honors College</span></li>
+          <li><span class="k">GPA</span><span class="v">3.85 — Dean's List</span></li>
+          <li><span class="k">Expected grad.</span><span class="v">May 2028</span></li>
+          <li><span class="k">Teams</span><span class="v">UMass Aeronautics / Rocket</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" data-sheet="03 / 06">
+      <div class="bom-head">
+        <p class="eyebrow" style="margin-bottom:0;"><span class="detail-mark">B</span>Selected work</p>
+        <span style="font-family:var(--mono); font-size:11px; color:var(--graphite);">Click a row to expand — bill of materials</span>
+      </div>
+
+      <table class="bom">
+        <thead>
+          <tr><th>Item</th><th>Description</th><th>Discipline</th><th>Team / Type</th><th></th></tr>
+        </thead>
+        <tbody>
+
+          <tr class="bom-row" data-target="p1">
+            <td class="item">001</td>
+            <td class="name">Competition airframe<span class="sub">AIAA Design/Build/Fly</span></td>
+            <td class="mat">Aerospace Structures</td>
+            <td class="qty">UMass Aeronautics</td>
+            <td class="chevron">▾</td>
+          </tr>
+          <tr class="bom-detail" id="p1">
+            <td colspan="5">
+              <div class="detail-grid">
+                <div>
+                  <h4>Overview</h4>
+                  <p>As Airframe Structures Lead, I lead a team of 5–6 engineers responsible for the design, integration, and manufacturing of the competition airframe. I develop aircraft configurations from aerodynamic, payload, and electrical subsystem requirements, translating those constraints into a manufacturable, flight-ready structure — modeling fuselage, tail, and wing architecture in Onshape.</p>
+                  <h4>Outcome</h4>
+                  <ul class="result-list">
+                    <li>Coordinated across aero, payload, and electrical subteams to keep every subsystem physically compatible</li>
+                    <li>Led manufacturing workflow improvements, including jig/fixture standardization and a planned 3-axis CNC router</li>
+                    <li>Contributed 5–10 pages to the team's 60-page competition design report and presented at technical reviews</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Tools & process</h4>
+                  <div class="taglist">
+                    <span class="tag">Onshape</span><span class="tag">DFM</span><span class="tag">Team Leadership</span><span class="tag">Systems Integration</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="bom-row" data-target="p2">
+            <td class="item">002</td>
+            <td class="name">Payload vibration-isolation module<span class="sub">IREC Rocket Competition</span></td>
+            <td class="mat">Vibration / Dynamics</td>
+            <td class="qty">UMass Rocket Team</td>
+            <td class="chevron">▾</td>
+          </tr>
+          <tr class="bom-detail" id="p2">
+            <td colspan="5">
+              <div class="detail-grid">
+                <div>
+                  <h4>Overview</h4>
+                  <p>As Payload Engineer, I lead development of a MATLAB simulation modeling the response of a vibration-isolation module under launch and parachute-deployment loading. I evaluated 100 candidate spring constants using RMS vibration response metrics, then applied a weighted value-function methodology to select the optimal spring configuration and balance competing stability considerations.</p>
+                  <h4>Outcome</h4>
+                  <ul class="result-list">
+                    <li>Selected a spring configuration through a 100-candidate, metric-driven trade study</li>
+                    <li>Supported fabrication and assembly of the module using CNC-machined components</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Tools & process</h4>
+                  <div class="taglist">
+                    <span class="tag">MATLAB</span><span class="tag">CNC Machining</span><span class="tag">Trade Studies</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="bom-row" data-target="p3">
+            <td class="item">003</td>
+            <td class="name">Foldable pontoon boat<span class="sub">9' × 8', truck-bed transportable</span></td>
+            <td class="mat">Structures / Buoyancy</td>
+            <td class="qty">Independent Project</td>
+            <td class="chevron">▾</td>
+          </tr>
+          <tr class="bom-detail" id="p3">
+            <td colspan="5">
+              <div class="detail-grid">
+                <div>
+                  <h4>Overview</h4>
+                  <p>Designed and fabricated a 9'×8' pontoon boat that folds down to fit in a pickup truck bed while retaining structural and buoyancy requirements. Built detailed CAD models in SolidWorks and Onshape, ran FEA to evaluate structural performance under loading, and performed hand calculations for buoyancy, maximum occupancy, and other critical design constraints.</p>
+                  <h4>Outcome</h4>
+                  <ul class="result-list">
+                    <li>Carried the design through a full cycle: concept generation → CAD → FEA → fabrication → on-water demonstration</li>
+                    <li>Presented a 30-minute design report covering decisions, progress, and outcomes</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Tools & process</h4>
+                  <div class="taglist">
+                    <span class="tag">SolidWorks</span><span class="tag">Onshape</span><span class="tag">FEA</span><span class="tag">Hand Calcs</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section id="skills" data-sheet="04 / 06">
+      <p class="eyebrow"><span class="detail-mark">C</span>Skills</p>
+      <div class="skills-grid">
+        <div class="skill-group">
+          <h3>Design & CAD</h3>
+          <div class="skill-chip-row">
+            <span class="chip">Onshape</span><span class="chip">SolidWorks</span><span class="chip">Engineering Design</span><span class="chip">Mechanical Design</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Analysis</h3>
+          <div class="skill-chip-row">
+            <span class="chip">FEA</span><span class="chip">MATLAB</span><span class="chip">Statics & Dynamics</span><span class="chip">Fluid Mechanics</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Manufacturing</h3>
+          <div class="skill-chip-row">
+            <span class="chip">CNC Machining</span><span class="chip">DFM</span><span class="chip">Welding & Metalworking</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Programming & Process</h3>
+          <div class="skill-chip-row">
+            <span class="chip">Java</span><span class="chip">C++</span><span class="chip">Project Management</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXPERIENCE ============ -->
+    <section id="experience" data-sheet="05 / 06">
+      <p class="eyebrow"><span class="detail-mark">D</span>Experience</p>
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-date">June 2026 — August 2026</div>
+          <div class="tl-role">Project Management Intern</div>
+          <div class="tl-org">Hodess Cleanrooms — Attleboro, MA</div>
+          <ul class="tl-desc">
+            <li>Led subcontractor sourcing for pharmaceutical and semiconductor cleanroom projects — identification, outreach, and qualification review</li>
+            <li>Used BuildingConnected to source HVAC, plumbing, and demolition trades, and procured intumescent coating contractors for a semiconductor wafer fab</li>
+            <li>Led a team of 4 interns building a SharePoint onboarding platform to improve knowledge transfer for future intern classes</li>
+            <li>Developed and standardized a bid-leveling workbook under project executives, improving subcontractor bid evaluation</li>
+          </ul>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-date">October 2025 — Present</div>
+          <div class="tl-role">Payload Engineer</div>
+          <div class="tl-org">UMass Rocket Engineering Design Team — IREC Rocket Competition</div>
+          <ul class="tl-desc">
+            <li>Lead development of a MATLAB simulation modeling vibration-isolation response under launch and deployment loads</li>
+            <li>Evaluated 100 candidate spring constants via RMS vibration metrics and a weighted value-function methodology</li>
+            <li>Supported fabrication and assembly of the module using CNC-machined components</li>
+          </ul>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-date">October 2024 — Present</div>
+          <div class="tl-role">Airframe Structures Lead</div>
+          <div class="tl-org">UMass Aeronautics Engineering Design Team — AIAA Design/Build/Fly</div>
+          <ul class="tl-desc">
+            <li>Lead a team of 5–6 engineers on design, integration, and manufacturing of the competition airframe</li>
+            <li>Maintain aircraft CAD models in Onshape spanning fuselage, tail, and wing architecture</li>
+            <li>Drive manufacturing workflow improvements — jig/fixture integration and a planned 3-axis CNC router</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="notes-block">
+        <div class="notes-head">General notes</div>
+        <ol>
+          <li>Unless otherwise noted, all listed roles are currently active.</li>
+          <li>Full project history and coursework available on request.</li>
+          <li>Open to co-op, internship, and entry-level opportunities in mechanical / aerospace engineering.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" data-sheet="06 / 06">
+      <p class="eyebrow"><span class="detail-mark">E</span>Contact</p>
+      <div class="contact-block">
+        <h2>Building something mechanical? Let's talk.</h2>
+        <div class="contact-links">
+          <a href="mailto:mziniti17@hotmail.com"><span class="k">Email</span>mziniti17@hotmail.com</a>
+          <a href="tel:+14015437503"><span class="k">Phone</span>401-543-7503</a>
+          <a href="https://www.linkedin.com/in/marcusziniti" target="_blank" rel="noopener"><span class="k">LinkedIn</span>linkedin.com/in/marcusziniti</a>
+          <span><span class="k">Location</span>Cumberland, RI</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <span>© 2026 Marcus Ziniti — Mechanical Engineering Portfolio</span>
+  <span><a href="#hero">↑ Back to top</a></span>
+</footer>
+
+<script>
+  document.querySelectorAll('.bom-row').forEach(function(row){
+    row.addEventListener('click', function(){
+      var target = document.getElementById(row.dataset.target);
+      var isOpen = target.classList.contains('open');
+      document.querySelectorAll('.bom-detail.open').forEach(function(d){ d.classList.remove('open'); });
+      document.querySelectorAll('.bom-row.open').forEach(function(r){ r.classList.remove('open'); });
+      if(!isOpen){
+        target.classList.add('open');
+        row.classList.add('open');
+      }
+    });
+  });
+
+  var sheetEl = document.getElementById('sheet-no');
+  var sections = document.querySelectorAll('section[data-sheet]');
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ sheetEl.textContent = entry.target.dataset.sheet; }
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    sections.forEach(function(s){ obs.observe(s); });
+  }
+</script>
+
+</body>
+</html>
